@@ -1,15 +1,18 @@
 import './style.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// KHR_draco_mesh_compressionで圧縮された3Dモデルを読み込む
+import khrDraco from "../static/assets/models/khr_draco.glb";
 // 点群の3Dモデルを使用する際に使用
 // import {PointGroupDraco} from "./pointGroup";
-// import draco from "../static/assets/models/cube.drc";
+// import PointCloud from "../static/assets/models/pathToPointCloud.drc";
 
 window.addEventListener('DOMContentLoaded', () => {
     init();
   });
-  
+
   const init = () => {
 
     window.addEventListener('resize', () =>{
@@ -36,14 +39,14 @@ window.addEventListener('DOMContentLoaded', () => {
     // canvasをbodyに追加
     document.body.appendChild(renderer.domElement);
     //RGBの設定
-    renderer.outputEncoding = sRGBEncoding
+    renderer.outputEncoding = THREE.sRGBEncoding
   
     // シーンを作成
     const scene = new THREE.Scene();
 
     // 点群の3Dモデルを読み込む
     // new PointGroupDraco(
-    //     draco,
+    //     PointCloud,
     //     scene
     // );
   
@@ -59,15 +62,26 @@ window.addEventListener('DOMContentLoaded', () => {
     //OrbitControlsを作成
     const controls = new OrbitControls(camera, renderer.domElement);   
 
-    const loader = new GLTFLoader();
-    loader.load('/assets/models/cube.glb', (gltf) => {
-        const modelGroup = gltf.scene;
-        modelGroup.traverse((child) => {
-           if (child instanceof THREE.Mesh) { 
-           }
-        });
-        // scene.add(gltf.scene);
-    });
+    // ローダーの読み込み
+    const gltfLoader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+
+    // KHR_draco_mesh_compressionで圧縮されたglbファイルを読みこむ
+    dracoLoader.setDecoderPath( "https://www.gstatic.com/draco/v1/decoders/" );
+    gltfLoader.setDRACOLoader( dracoLoader );
+    gltfLoader.load(khrDraco, (gltf) =>{
+      scene.add(gltf.scene);
+    })
+
+    // glbファイルを読み込む
+    // gltfLoader.load('/assets/models/cube.glb', (gltf) => {
+    //     const modelGroup = gltf.scene;
+    //     modelGroup.traverse((child) => {
+    //        if (child instanceof THREE.Mesh) {
+    //        }
+    //     });
+    //     scene.add(gltf.scene);
+    // });
   
     // 平行光源を生成
     const light = new THREE.DirectionalLight(0xffffff);
@@ -75,9 +89,9 @@ window.addEventListener('DOMContentLoaded', () => {
     scene.add(light);
 
     //グリッドヘルパーを追加
-    var size = 10;
-    var step = 1;
-    var gridHelper = new THREE.GridHelper(size, step);
+    const size = 10;
+    const step = 1;
+    const gridHelper = new THREE.GridHelper(size, step);
     scene.add(gridHelper);
 
     const tick = () => {
