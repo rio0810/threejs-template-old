@@ -1,9 +1,10 @@
 import './style.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import {PointGroupDraco} from "./pointGroup";
-import draco from "../static/assets/models/cube.drc";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// 点群の3Dモデルを使用する際に使用
+// import {PointGroupDraco} from "./pointGroup";
+// import draco from "../static/assets/models/cube.drc";
 
 window.addEventListener('DOMContentLoaded', () => {
     init();
@@ -34,15 +35,17 @@ window.addEventListener('DOMContentLoaded', () => {
     renderer.setPixelRatio(window.devicePixelRatio);
     // canvasをbodyに追加
     document.body.appendChild(renderer.domElement);
+    //RGBの設定
+    renderer.outputEncoding = sRGBEncoding
   
     // シーンを作成
     const scene = new THREE.Scene();
 
-    // drcローダーを作成
-    new PointGroupDraco(
-        draco,
-        scene
-    );
+    // 点群の3Dモデルを読み込む
+    // new PointGroupDraco(
+    //     draco,
+    //     scene
+    // );
   
     // カメラを作成
     const camera = new THREE.PerspectiveCamera(
@@ -63,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
            if (child instanceof THREE.Mesh) { 
            }
         });
-        scene.add(gltf.scene);
+        // scene.add(gltf.scene);
     });
   
     // 平行光源を生成
