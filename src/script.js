@@ -14,8 +14,8 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 const init = () => {
-
     window.addEventListener('resize', () =>{
+
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -96,6 +96,8 @@ const init = () => {
 
     const tick = () => {
         requestAnimationFrame(tick);
+
+        controls.update();
 
         // 描画
         renderer.render(scene, camera);
