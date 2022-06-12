@@ -32,7 +32,9 @@ const init = () => {
     const VIEWPORT_H = window.innerHeight;
 
     // レンダラーを作成
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer(
+        antialias: true
+    );
     // レンダラーのサイズを設定
     renderer.setSize(VIEWPORT_W, VIEWPORT_H);
     renderer.setPixelRatio(window.devicePixelRatio);
